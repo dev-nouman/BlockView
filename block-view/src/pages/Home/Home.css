@@ -89,37 +89,4 @@
     width: auto;
   }
 
-  /* COIN TABLE */
-  .coin-table th,
-  .coin-table td {
-    padding: 16px 18px;
-    font-size: 14px;
-  }
-
-  .coin-table {
-    border-radius: 18px;
-  }
-  
-  .coin-info {
-    gap: 12px;
-  }
-
-  .coin-info img {
-    width: 30px;
-    height: 30px;
-  }
-
-  .coin-info h4 {
-    font-size: 13px;
-  }
-
-  .coin-info p {
-    font-size: 11px;
-  }
-
-  .table-container {
-    border-radius: 18px;
-    width: 95%;
-    padding: 0 8px; 
-  }
 }
