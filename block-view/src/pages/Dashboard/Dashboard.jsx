@@ -1,11 +1,19 @@
-import React from 'react'
+import React from "react";
+import CurrentValue from "../../components/dashboardcomp/CurrentValue/CurrentValue";
+import TotalInvestment from "../../components/dashboardcomp/TotalInvestment/TotalInvestment";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
-  )
-}
+    <div className="dashboard">
 
-export default Dashboard
+      <div className="dashboard-grid-top">
+        <CurrentValue />
+        <TotalInvestment />
+      </div>
+
+    </div>
+  );
+};
+
+export default Dashboard;
