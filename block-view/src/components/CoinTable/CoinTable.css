@@ -1,51 +1,62 @@
 .table-container {
   width: 80%;
   margin-top: 60px;
-
   overflow-x: auto;
 }
 
 .coin-table {
   width: 100%;
   border-collapse: collapse;
-
   background: var(--card);
-
   border: 1px solid var(--border);
   border-radius: 24px;
-
   overflow: hidden;
+  table-layout: fixed;
 }
 
 .coin-table th {
   text-align: left;
-
   padding: 18px;
-
   font-size: 14px;
   font-weight: 600;
-
-   background: #eaf2ff;
-
+  background: #eaf2ff;
   color: var(--text);
 }
 
 .coin-table td {
   padding: 20px 18px;
-
   border-top: 1px solid var(--border);
-
   color: var(--text);
+  vertical-align: middle;
 }
 
 .coin-table tr {
   transition: 0.2s ease;
+  height: 72px;
 }
 
 .coin-table tr:hover {
-  background: rgba(37, 99, 235, 0.03);
+  background: rgba(37,99,235,0.03);
 }
 
+/* COLUMN WIDTH FIX */
+.coin-table th:nth-child(1),
+.coin-table td:nth-child(1) {
+  width: 60px;
+  text-align: center;
+}
+
+.coin-table th:nth-child(2),
+.coin-table td:nth-child(2) {
+  width: 260px;
+}
+
+.coin-table th:nth-child(6),
+.coin-table td:nth-child(6) {
+  width: 140px;
+}
+
+/* COIN INFO */
 .coin-info {
   display: flex;
   align-items: center;
@@ -67,6 +78,7 @@
   color: #94a3b8;
 }
 
+/* PRICE COLORS */
 .green {
   color: #22c55e;
   font-weight: 600;
@@ -77,15 +89,26 @@
   font-weight: 600;
 }
 
+/* ACTIONS */
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* WATCHLIST */
+.watchlist-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .watchlist-icon svg {
-  font-size: 16px;
-
+  font-size: 18px;
   color: #94a3b8;
-
   cursor: pointer;
-
   transition: 0.2s ease;
-  margin: 5px;
 }
 
 .watchlist-icon svg:hover {
@@ -93,17 +116,25 @@
   transform: scale(1.1);
 }
 
+.filled-star {
+  color: #facc15;
+}
+
+/* ADD BUTTON */
 .icon-add {
   background: transparent;
   border: 1px solid var(--border);
-
-  padding: 3px;
-  border-radius: 20px;
-
+  padding: 6px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text);
-  font-size: 0.3rem;
-
   transition: 0.2s ease;
+}
+
+.icon-add svg {
+  font-size: 16px;
 }
 
 .icon-add:hover {
