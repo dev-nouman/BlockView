@@ -73,12 +73,12 @@
 
 /* PRICE COLORS */
 .green {
-  color: #22c55e;
+  color: #22c55e !important; 
   font-weight: 600;
 }
 
 .red {
-  color: #ef4444;
+  color: #ef4444 !important; 
   font-weight: 600;
 }
 

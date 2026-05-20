@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { FiStar, FiPlus } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
-import { getWatchlist, saveWatchlist } from "../../../utils/watchlist";
+import {
+    getWatchlist,
+    saveWatchlist
+} from "../../../utils/watchlist";
+
 import "./CoinTable.css";
 
 const CoinTable = ({ coins }) => {
@@ -14,21 +18,32 @@ const CoinTable = ({ coins }) => {
 
     const toggleWatchlist = (coin) => {
 
-        const exists = watchlist.find(item => item.id === coin.id);
+        const exists = watchlist.find(
+            item => item.id === coin.id
+        );
 
         let updatedWatchlist;
 
         if (exists) {
-            updatedWatchlist = watchlist.filter(item => item.id !== coin.id);
+
+            updatedWatchlist = watchlist.filter(
+                item => item.id !== coin.id
+            );
+
         } else {
+
             updatedWatchlist = [...watchlist, coin];
         }
 
         setWatchlist(updatedWatchlist);
+
         saveWatchlist(updatedWatchlist);
     };
 
+
+
     return (
+
         <div className="table-container">
 
             <table className="coin-table">
@@ -46,54 +61,64 @@ const CoinTable = ({ coins }) => {
 
                 <tbody>
 
-                    {coins.map(coin => (
+                    {coins.map((coin) => {
 
-                        <tr key={coin.id}>
+                        const change = Number(coin.price_change_percentage_24h);
+                        const isPositive = change > 0;
 
-                            <td>{coin.rank}</td>
+                        return (
+                            <tr key={coin.id}>
 
-                            <td className="coin-info">
-                                <img src={coin.image} alt={coin.name} />
-                                <div>
-                                    <h4>{coin.name}</h4>
-                                    <p>{coin.symbol}</p>
-                                </div>
-                            </td>
+                                <td>{coin.market_cap_rank}</td>
 
-                            <td>${coin.price.toLocaleString()}</td>
-
-                            <td className={coin.change > 0 ? "green" : "red"}>
-                                {coin.change}%
-                            </td>
-
-                            <td>${coin.marketCap}</td>
-
-                            <td>
-                                <div className="actions">
-
-                                    <div onClick={() => toggleWatchlist(coin)}>
-                                        {watchlist.find(item => item.id === coin.id)
-                                            ? <FaStar className="filled-star" />
-                                            : <FiStar />
-                                        }
+                                <td className="coin-info">
+                                    <img src={coin.image} alt={coin.name} />
+                                    <div>
+                                        <h4>{coin.name}</h4>
+                                        <p>{coin.symbol.toUpperCase()}</p>
                                     </div>
+                                </td>
 
-                                    <button className="icon-add">
-                                        <FiPlus />
-                                    </button>
+                                <td>
+                                    ${coin.current_price?.toLocaleString()}
+                                </td>
 
-                                </div>
-                            </td>
+                                <td className={isPositive ? "green" : "red"}>
+                                    {isFinite(change) ? `${change.toFixed(2)}%` : "0%"}
+                                </td>
 
-                        </tr>
+                                <td>
+                                    ${coin.market_cap?.toLocaleString()}
+                                </td>
 
-                    ))}
+                                <td>
+                                    <div className="actions">
+
+                                        <div onClick={() => toggleWatchlist(coin)}>
+                                            {
+                                                watchlist.find(item => item.id === coin.id)
+                                                    ? <FaStar className="filled-star" />
+                                                    : <FiStar />
+                                            }
+                                        </div>
+
+                                        <button className="icon-add">
+                                            <FiPlus />
+                                        </button>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        );
+                    })}
 
                 </tbody>
 
             </table>
 
         </div>
+
     );
 };
 
