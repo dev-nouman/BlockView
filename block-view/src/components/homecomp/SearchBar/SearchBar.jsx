@@ -1,28 +1,49 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { FiSearch } from 'react-icons/fi'
+import { searchCoins } from '../../../services/coinGeckoApi'
 import './SearchBar.css'
 
-const SearchBar = () => {
+const SearchBar = ({ setCoins, allCoins }) => {
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
+  const [query, setQuery] = useState("")
 
-      console.log("searching");
-      
-    }
+  useEffect(() => {
 
-    return (
-        
-            <form onSubmit={handleSubmit}>
-                <div className='input-wrapper'>
-                    <input type="text" placeholder='Search for Crypto' />
-                    <button type='submit'>
-                        <FiSearch />
-                    </button>
-                </div>
-            </form>
-        
-    )
+    const delay = setTimeout(async () => {
+
+      if (!query) {
+        setCoins(allCoins)  
+        return
+      }
+
+      const results = await searchCoins(query)
+
+      setCoins(results || [])
+
+    }, 500)
+
+    return () => clearTimeout(delay)
+
+  }, [query, allCoins, setCoins])
+
+  return (
+
+    <div className="input-wrapper">
+
+      <input
+        type="text"
+        placeholder="Type Coin Symbols..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+
+      <button type="button">
+        <FiSearch />
+      </button>
+
+    </div>
+
+  )
 }
 
 export default SearchBar

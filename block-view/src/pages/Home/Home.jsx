@@ -7,19 +7,31 @@ import './Home.css'
 const Home = () => {
 
   const [coins, setCoins] = useState([])
+  const [allCoins, setAllCoins] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
 
     const fetchCoins = async () => {
 
-      const data = await getTopCoins()
+      try {
 
-      console.log("API DATA:", data)
+        const data = await getTopCoins()
 
-      setCoins(data || [])
+        console.log("API DATA:", data)
 
-      setLoading(false)
+        const safeData = Array.isArray(data) ? data : []
+
+        setCoins(safeData)
+        setAllCoins(safeData)
+
+      } catch (err) {
+        console.log(err)
+        setCoins([])
+        setAllCoins([])
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchCoins()
@@ -32,7 +44,8 @@ const Home = () => {
       <div className="hero">
         <h1>Track Cryptocurrency Prices</h1>
         <p>Stay updated with real-time cryptocurrency prices and track your portfolio.</p>
-        <SearchBar />
+
+        <SearchBar setCoins={setCoins} allCoins={allCoins} />
       </div>
 
       {
