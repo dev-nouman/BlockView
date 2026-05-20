@@ -1,46 +1,49 @@
 import React, { useEffect, useState } from 'react'
-import { FiStar, FiPlus } from "react-icons/fi";
-import { FaStar } from "react-icons/fa";
+import { FiStar, FiPlus } from "react-icons/fi"
+import { FaStar } from "react-icons/fa"
 import {
     getWatchlist,
     saveWatchlist
-} from "../../../utils/watchlist";
+} from "../../../utils/watchlist"
 
-import "./CoinTable.css";
+import BuyModal from '../../commoncomp/BuyModal/BuyModal'
+import { getPortfolio, savePortfolio } from '../../../utils/portfolio'
+
+import "./CoinTable.css"
 
 const CoinTable = ({ coins }) => {
 
-    const [watchlist, setWatchlist] = useState([]);
+    const [watchlist, setWatchlist] = useState([])
+    const [selectedCoin, setSelectedCoin] = useState(null)
 
     useEffect(() => {
-        setWatchlist(getWatchlist());
-    }, []);
+        setWatchlist(getWatchlist())
+    }, [])
 
     const toggleWatchlist = (coin) => {
 
-        const exists = watchlist.find(
-            item => item.id === coin.id
-        );
+        const exists = watchlist.find(item => item.id === coin.id)
 
-        let updatedWatchlist;
+        let updatedWatchlist
 
         if (exists) {
-
-            updatedWatchlist = watchlist.filter(
-                item => item.id !== coin.id
-            );
-
+            updatedWatchlist = watchlist.filter(item => item.id !== coin.id)
         } else {
-
-            updatedWatchlist = [...watchlist, coin];
+            updatedWatchlist = [...watchlist, coin]
         }
 
-        setWatchlist(updatedWatchlist);
+        setWatchlist(updatedWatchlist)
+        saveWatchlist(updatedWatchlist)
+    }
 
-        saveWatchlist(updatedWatchlist);
-    };
+    const handleBuy = (entry) => {
 
+        const existing = getPortfolio()
 
+        const updated = [...existing, entry]
+
+        savePortfolio(updated)
+    }
 
     return (
 
@@ -63,8 +66,8 @@ const CoinTable = ({ coins }) => {
 
                     {coins.map((coin) => {
 
-                        const change = Number(coin.price_change_percentage_24h);
-                        const isPositive = change > 0;
+                        const change = Number(coin.price_change_percentage_24h)
+                        const isPositive = change > 0
 
                         return (
                             <tr key={coin.id}>
@@ -84,7 +87,9 @@ const CoinTable = ({ coins }) => {
                                 </td>
 
                                 <td className={isPositive ? "green" : "red"}>
-                                    {isFinite(change) ? `${change.toFixed(2)}%` : "0%"}
+                                    {isFinite(change)
+                                        ? `${change.toFixed(2)}%`
+                                        : "0%"}
                                 </td>
 
                                 <td>
@@ -102,7 +107,12 @@ const CoinTable = ({ coins }) => {
                                             }
                                         </div>
 
-                                        <button className="icon-add">
+                                        <button
+                                            className="icon-add"
+                                            onClick={() => {
+                                                setSelectedCoin(coin)
+                                            }}
+                                        >
                                             <FiPlus />
                                         </button>
 
@@ -110,16 +120,28 @@ const CoinTable = ({ coins }) => {
                                 </td>
 
                             </tr>
-                        );
+                        )
                     })}
 
                 </tbody>
 
             </table>
 
+            {/* MODAL */}
+            {selectedCoin && (
+                <BuyModal
+                    coin={selectedCoin}
+                    onClose={() => setSelectedCoin(null)}
+                    onSave={(data) => {
+                        handleBuy(data)
+                        setSelectedCoin(null)
+                    }}
+                />
+            )}
+
         </div>
 
-    );
-};
+    )
+}
 
-export default CoinTable;
+export default CoinTable
