@@ -2,6 +2,7 @@
   width: 100%;
   min-height: calc(100vh - 70px);
   padding: 30px 20px;
+
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -13,9 +14,23 @@
   gap: 20px;
 }
 
+.dashboard-grid-middle {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
-  .dashboard-grid-top {
+
+  .dashboard {
+    padding: 20px 12px;
+    gap: 15px;
+  }
+
+  .dashboard-grid-top,
+  .dashboard-grid-middle {
     grid-template-columns: 1fr;
   }
+
 }

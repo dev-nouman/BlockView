@@ -1,3 +1,72 @@
-.portfolio-table {
-  
+.portfolio-table-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.portfolio-table-card h4 {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-size: 13px;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.coin-name {
+  display: flex;
+  flex-direction: column;
+}
+
+.coin-name span {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.green {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.red {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* media query */
+
+@media (max-width: 768px) {
+
+  .portfolio-table-card {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 650px;
+  }
+
+  th, td {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .coin-name span {
+    font-size: 10px;
+  }
 }

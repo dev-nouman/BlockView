@@ -1,10 +1,12 @@
-import React from 'react';
-import './CurrentValue.css';
+import React from "react";
+import "./CurrentValue.css";
 
 const CurrentValue = () => {
   return (
-    <div className="current-value">
-      <h3>Current Value</h3>
+    <div className="dash-card">
+      <h4>Current Value</h4>
+      <h2>$12,450</h2>
+      <p className="positive">+2.4%</p>
     </div>
   );
 };

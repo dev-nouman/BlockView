@@ -1,3 +1,42 @@
-.gainers-losers {
-  
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.tabs button {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.tabs .active {
+  background: var(--primary);
+  color: white;
+}
+
+.list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.green {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.red {
+  color: #ef4444;
+  font-weight: 600;
 }

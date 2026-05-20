@@ -1,12 +1,15 @@
-import React from 'react';
-import './ExportButtons.css';
+import React from "react";
+import "./ExportButtons.css";
 
 const ExportButtons = () => {
-  return (
-    <div className="export-buttons">
-      <h3>Export Buttons</h3>
-    </div>
-  );
+    return (
+        <div className="export-bar">
+
+            <button className="btn">Export CSV</button>
+            <button className="btn primary">Export PDF</button>
+
+        </div>
+    );
 };
 
 export default ExportButtons;
