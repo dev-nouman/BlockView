@@ -1,6 +1,6 @@
 import React from 'react'
-import SearchBar from '../../components/SearchBar/SearchBar'
-import CoinTable from '../../components/CoinTable/CoinTable'
+import SearchBar from '../../components/homecomp/SearchBar/SearchBar'
+import CoinTable from '../../components/homecomp/CoinTable/CoinTable'
 import coins from '../../data/coins'
 import './Home.css'
 

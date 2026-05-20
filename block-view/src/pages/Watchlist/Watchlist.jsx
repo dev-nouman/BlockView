@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import CoinTable from '../../components/CoinTable/CoinTable'
+import CoinTable from '../../components/homecomp/CoinTable/CoinTable'
 import { getWatchlist } from '../../utils/watchlist'
 import './Watchlist.css'
 
