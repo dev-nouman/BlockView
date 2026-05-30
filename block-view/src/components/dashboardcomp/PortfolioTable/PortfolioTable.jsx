@@ -1,63 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { getPortfolio } from "../../../utils/portfolio";
-import { getTopCoins } from "../../../services/coinGeckoApi";
 import "./PortfolioTable.css";
 
-const PortfolioTable = () => {
+const PortfolioTable = ({ portfolio = [], market = [] }) => {
 
-    const [portfolio, setPortfolio] = useState([]);
+    const [tableData, setTableData] = useState([]);
 
     useEffect(() => {
 
-        const loadPortfolio = async () => {
+        const enriched = portfolio.map((item, index) => {
 
-            const savedPortfolio = getPortfolio();
-            const marketCoins = await getTopCoins();
+            const coin = market.find(
+                c => c.id === item.id
+            );
 
-            const enriched = savedPortfolio.map((item, index) => {
+            if (!coin) return null;
 
-                const coin = marketCoins.find(
-                    c => c.id === item.id
-                );
+            const investment =
+                item.buyPrice * item.quantity;
 
-                if (!coin) return null;
+            const value =
+                coin.current_price * item.quantity;
 
-                const investment =
-                    item.buyPrice * item.quantity;
+            const profit =
+                value - investment;
 
-                const value =
-                    coin.current_price * item.quantity;
+            const profitPercent =
+                investment > 0
+                    ? ((profit / investment) * 100).toFixed(2)
+                    : 0;
 
-                const profit =
-                    value - investment;
+            return {
+                id: index + 1,
+                name: coin.name,
+                symbol: coin.symbol.toUpperCase(),
+                price: coin.current_price,
+                investment,
+                coins: item.quantity,
+                value,
+                pl: profitPercent,
+            };
 
-                const profitPercent =
-                    investment > 0
-                        ? ((profit / investment) * 100).toFixed(2)
-                        : 0;
+        }).filter(Boolean);
 
-                return {
-                    id: index + 1,
-                    name: coin.name,
-                    symbol: coin.symbol.toUpperCase(),
-                    price: coin.current_price,
-                    investment,
-                    coins: item.quantity,
-                    value,
-                    pl: profitPercent,
-                };
+        setTableData(enriched);
 
-            }).filter(Boolean);
+    }, [portfolio, market]);
 
-            setPortfolio(enriched);
-
-        };
-
-        loadPortfolio();
-
-    }, []);
-
-    if (portfolio.length === 0) {
+    if (tableData.length === 0) {
         return (
             <div className="portfolio-table-card">
                 <h4>Portfolio Details</h4>
@@ -87,7 +76,7 @@ const PortfolioTable = () => {
 
                 <tbody>
 
-                    {portfolio.map((coin) => (
+                    {tableData.map((coin) => (
 
                         <tr key={coin.id}>
 

@@ -10,7 +10,8 @@ import {
 import BuyModal from '../../commoncomp/BuyModal/BuyModal'
 import RemoveModal from "../../commoncomp/RemoveModal/RemoveModal"
 
-import { getPortfolio, savePortfolio } from "../../../utils/portfolio"
+import { usePortfolioContext } from "../../../context/PortfolioContext"
+import { getPortfolio } from "../../../utils/portfolio"
 
 import "./CoinTable.css"
 
@@ -19,6 +20,7 @@ const CoinTable = ({ coins }) => {
     const [watchlist, setWatchlist] = useState([])
     const [selectedCoin, setSelectedCoin] = useState(null)
     const [removeCoin, setRemoveCoin] = useState(null)
+    const { addCoin, removeCoin: removePortfolioCoin } = usePortfolioContext()
 
     useEffect(() => {
         setWatchlist(getWatchlist())
@@ -43,33 +45,12 @@ const CoinTable = ({ coins }) => {
 
     // BUY COIN
     const handleBuy = (entry) => {
-
-        const existing = getPortfolio()
-
-        const updated = [...existing, entry]
-
-        savePortfolio(updated)
+        addCoin(entry)
     }
 
     // REMOVE / SELL COIN
     const handleRemove = ({ coin, quantity }) => {
-
-        const portfolio = getPortfolio()
-
-        const updated = portfolio.map(item => {
-
-            if (item.id !== coin.id) return item
-
-            const newQty = item.quantity - quantity
-
-            return {
-                ...item,
-                quantity: newQty
-            }
-
-        }).filter(item => item.quantity > 0)
-
-        savePortfolio(updated)
+        removePortfolioCoin(coin.id, quantity)
     }
 
     return (

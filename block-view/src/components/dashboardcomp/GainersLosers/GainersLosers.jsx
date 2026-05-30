@@ -1,65 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { getPortfolio } from "../../../utils/portfolio";
-import { getTopCoins } from "../../../services/coinGeckoApi";
 import "./GainersLosers.css";
 
-const GainersLosers = () => {
+const GainersLosers = ({ portfolio = [], market = [] }) => {
 
     const [gainers, setGainers] = useState([]);
     const [losers, setLosers] = useState([]);
 
     useEffect(() => {
 
-        const loadData = async () => {
+        const enriched = portfolio.map(item => {
 
-            const saved = getPortfolio();
-            const market = await getTopCoins();
+            const coin = market.find(
+                c => c.id === item.id
+            );
 
-            const enriched = saved.map(item => {
+            if (!coin) return null;
 
-                const coin = market.find(
-                    c => c.id === item.id
-                );
+            const investment =
+                item.buyPrice * item.quantity;
 
-                if (!coin) return null;
+            const value =
+                coin.current_price * item.quantity;
 
-                const investment =
-                    item.buyPrice * item.quantity;
+            const profitPercent =
+                investment > 0
+                    ? ((value - investment) / investment) * 100
+                    : 0;
 
-                const value =
-                    coin.current_price * item.quantity;
+            return {
+                symbol: coin.symbol.toUpperCase(),
+                profitPercent
+            };
 
-                const profitPercent =
-                    investment > 0
-                        ? ((value - investment) / investment) * 100
-                        : 0;
+        }).filter(Boolean);
 
-                return {
-                    symbol: coin.symbol.toUpperCase(),
-                    profitPercent
-                };
+        // STRICT separation - gainers and losers
+        const gainersList = enriched
+            .filter(c => c.profitPercent > 0)
+            .sort((a, b) => b.profitPercent - a.profitPercent)
+            .slice(0, 3);
 
-            }).filter(Boolean);
+        const losersList = enriched
+            .filter(c => c.profitPercent < 0)
+            .sort((a, b) => a.profitPercent - b.profitPercent)
+            .slice(0, 3);
 
-            // ✅ STRICT separation (THIS FIXES YOUR BUG)
-            const gainersList = enriched
-                .filter(c => c.profitPercent > 0)
-                .sort((a, b) => b.profitPercent - a.profitPercent)
-                .slice(0, 3);
+        setGainers(gainersList);
+        setLosers(losersList);
 
-            const losersList = enriched
-                .filter(c => c.profitPercent < 0)
-                .sort((a, b) => a.profitPercent - b.profitPercent)
-                .slice(0, 3);
-
-            setGainers(gainersList);
-            setLosers(losersList);
-
-        };
-
-        loadData();
-
-    }, []);
+    }, [portfolio, market]);
 
     return (
         <div className="gl-card">
