@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { FiStar, FiPlus } from "react-icons/fi"
 import { FaStar } from "react-icons/fa"
+
 import {
     getWatchlist,
     saveWatchlist
 } from "../../../utils/watchlist"
 
 import BuyModal from '../../commoncomp/BuyModal/BuyModal'
-import { getPortfolio, savePortfolio } from '../../../utils/portfolio'
+import RemoveModal from "../../commoncomp/RemoveModal/RemoveModal"
+
+import { getPortfolio, savePortfolio } from "../../../utils/portfolio"
 
 import "./CoinTable.css"
 
@@ -15,32 +18,56 @@ const CoinTable = ({ coins }) => {
 
     const [watchlist, setWatchlist] = useState([])
     const [selectedCoin, setSelectedCoin] = useState(null)
+    const [removeCoin, setRemoveCoin] = useState(null)
 
     useEffect(() => {
         setWatchlist(getWatchlist())
     }, [])
 
+    // WATCHLIST TOGGLE
     const toggleWatchlist = (coin) => {
 
         const exists = watchlist.find(item => item.id === coin.id)
 
-        let updatedWatchlist
+        let updated
 
         if (exists) {
-            updatedWatchlist = watchlist.filter(item => item.id !== coin.id)
+            updated = watchlist.filter(item => item.id !== coin.id)
         } else {
-            updatedWatchlist = [...watchlist, coin]
+            updated = [...watchlist, coin]
         }
 
-        setWatchlist(updatedWatchlist)
-        saveWatchlist(updatedWatchlist)
+        setWatchlist(updated)
+        saveWatchlist(updated)
     }
 
+    // BUY COIN
     const handleBuy = (entry) => {
 
         const existing = getPortfolio()
 
         const updated = [...existing, entry]
+
+        savePortfolio(updated)
+    }
+
+    // REMOVE / SELL COIN
+    const handleRemove = ({ coin, quantity }) => {
+
+        const portfolio = getPortfolio()
+
+        const updated = portfolio.map(item => {
+
+            if (item.id !== coin.id) return item
+
+            const newQty = item.quantity - quantity
+
+            return {
+                ...item,
+                quantity: newQty
+            }
+
+        }).filter(item => item.quantity > 0)
 
         savePortfolio(updated)
     }
@@ -99,6 +126,7 @@ const CoinTable = ({ coins }) => {
                                 <td>
                                     <div className="actions">
 
+                                        {/* WATCHLIST */}
                                         <div onClick={() => toggleWatchlist(coin)}>
                                             {
                                                 watchlist.find(item => item.id === coin.id)
@@ -107,13 +135,20 @@ const CoinTable = ({ coins }) => {
                                             }
                                         </div>
 
+                                        {/* BUY */}
                                         <button
                                             className="icon-add"
-                                            onClick={() => {
-                                                setSelectedCoin(coin)
-                                            }}
+                                            onClick={() => setSelectedCoin(coin)}
                                         >
                                             <FiPlus />
+                                        </button>
+
+                                        {/* REMOVE (SELL) */}
+                                        <button
+                                            className="icon-add"
+                                            onClick={() => setRemoveCoin(coin)}
+                                        >
+                                            −
                                         </button>
 
                                     </div>
@@ -127,7 +162,7 @@ const CoinTable = ({ coins }) => {
 
             </table>
 
-            {/* MODAL */}
+            {/* BUY MODAL */}
             {selectedCoin && (
                 <BuyModal
                     coin={selectedCoin}
@@ -135,6 +170,18 @@ const CoinTable = ({ coins }) => {
                     onSave={(data) => {
                         handleBuy(data)
                         setSelectedCoin(null)
+                    }}
+                />
+            )}
+
+            {/* REMOVE MODAL */}
+            {removeCoin && (
+                <RemoveModal
+                    coin={removeCoin}
+                    onClose={() => setRemoveCoin(null)}
+                    onConfirm={(data) => {
+                        handleRemove(data)
+                        setRemoveCoin(null)
                     }}
                 />
             )}

@@ -1,55 +1,105 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getPortfolio } from "../../../utils/portfolio";
+import { getTopCoins } from "../../../services/coinGeckoApi";
 import "./GainersLosers.css";
 
 const GainersLosers = () => {
-  const [tab, setTab] = useState("gainers");
 
-  const gainers = [
-    { name: "BTC", change: "+5.2%" },
-    { name: "ETH", change: "+3.1%" },
-    { name: "SOL", change: "+2.4%" },
-  ];
+    const [gainers, setGainers] = useState([]);
+    const [losers, setLosers] = useState([]);
 
-  const losers = [
-    { name: "XRP", change: "-2.1%" },
-    { name: "DOGE", change: "-3.4%" },
-    { name: "ADA", change: "-1.8%" },
-  ];
+    useEffect(() => {
 
-  const data = tab === "gainers" ? gainers : losers;
+        const loadData = async () => {
 
-  return (
-    <div className="dash-card">
+            const saved = getPortfolio();
+            const market = await getTopCoins();
 
-      <div className="tabs">
-        <button
-          className={tab === "gainers" ? "active" : ""}
-          onClick={() => setTab("gainers")}
-        >
-          Top Gainers
-        </button>
+            const enriched = saved.map(item => {
 
-        <button
-          className={tab === "losers" ? "active" : ""}
-          onClick={() => setTab("losers")}
-        >
-          Top Losers
-        </button>
-      </div>
+                const coin = market.find(
+                    c => c.id === item.id
+                );
 
-      <div className="list">
-        {data.map((coin, index) => (
-          <div className="row" key={index}>
-            <span>{coin.name}</span>
-            <span className={tab === "gainers" ? "green" : "red"}>
-              {coin.change}
-            </span>
-          </div>
-        ))}
-      </div>
+                if (!coin) return null;
 
-    </div>
-  );
+                const investment =
+                    item.buyPrice * item.quantity;
+
+                const value =
+                    coin.current_price * item.quantity;
+
+                const profitPercent =
+                    investment > 0
+                        ? ((value - investment) / investment) * 100
+                        : 0;
+
+                return {
+                    symbol: coin.symbol.toUpperCase(),
+                    profitPercent
+                };
+
+            }).filter(Boolean);
+
+            // ✅ STRICT separation (THIS FIXES YOUR BUG)
+            const gainersList = enriched
+                .filter(c => c.profitPercent > 0)
+                .sort((a, b) => b.profitPercent - a.profitPercent)
+                .slice(0, 3);
+
+            const losersList = enriched
+                .filter(c => c.profitPercent < 0)
+                .sort((a, b) => a.profitPercent - b.profitPercent)
+                .slice(0, 3);
+
+            setGainers(gainersList);
+            setLosers(losersList);
+
+        };
+
+        loadData();
+
+    }, []);
+
+    return (
+        <div className="gl-card">
+
+            <div className="gl-section">
+
+                <h4>Top Gainers</h4>
+
+                {gainers.length === 0 ? (
+                    <p>No gainers</p>
+                ) : (
+                    gainers.map((c, i) => (
+                        <div key={i} className="gl-item green">
+                            <span>{c.symbol}</span>
+                            <span>+{c.profitPercent.toFixed(2)}%</span>
+                        </div>
+                    ))
+                )}
+
+            </div>
+
+            <div className="gl-section">
+
+                <h4>Top Losers</h4>
+
+                {losers.length === 0 ? (
+                    <p>No losers</p>
+                ) : (
+                    losers.map((c, i) => (
+                        <div key={i} className="gl-item red">
+                            <span>{c.symbol}</span>
+                            <span>{c.profitPercent.toFixed(2)}%</span>
+                        </div>
+                    ))
+                )}
+
+            </div>
+
+        </div>
+    );
 };
 
 export default GainersLosers;

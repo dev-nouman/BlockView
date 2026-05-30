@@ -1,39 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getPortfolio } from "../../../utils/portfolio";
+import { getTopCoins } from "../../../services/coinGeckoApi";
 import "./PortfolioTable.css";
 
 const PortfolioTable = () => {
-    const portfolio = [
-        {
-            id: 1,
-            name: "Bitcoin",
-            symbol: "BTC",
-            price: 42000,
-            investment: 5000,
-            coins: 0.12,
-            value: 5040,
-            pl: "+0.8%",
-        },
-        {
-            id: 2,
-            name: "Ethereum",
-            symbol: "ETH",
-            price: 2500,
-            investment: 3000,
-            coins: 1.2,
-            value: 3200,
-            pl: "+6.6%",
-        },
-        {
-            id: 3,
-            name: "Solana",
-            symbol: "SOL",
-            price: 120,
-            investment: 1500,
-            coins: 12.5,
-            value: 1400,
-            pl: "-6.6%",
-        },
-    ];
+
+    const [portfolio, setPortfolio] = useState([]);
+
+    useEffect(() => {
+
+        const loadPortfolio = async () => {
+
+            const savedPortfolio = getPortfolio();
+            const marketCoins = await getTopCoins();
+
+            const enriched = savedPortfolio.map((item, index) => {
+
+                const coin = marketCoins.find(
+                    c => c.id === item.id
+                );
+
+                if (!coin) return null;
+
+                const investment =
+                    item.buyPrice * item.quantity;
+
+                const value =
+                    coin.current_price * item.quantity;
+
+                const profit =
+                    value - investment;
+
+                const profitPercent =
+                    investment > 0
+                        ? ((profit / investment) * 100).toFixed(2)
+                        : 0;
+
+                return {
+                    id: index + 1,
+                    name: coin.name,
+                    symbol: coin.symbol.toUpperCase(),
+                    price: coin.current_price,
+                    investment,
+                    coins: item.quantity,
+                    value,
+                    pl: profitPercent,
+                };
+
+            }).filter(Boolean);
+
+            setPortfolio(enriched);
+
+        };
+
+        loadPortfolio();
+
+    }, []);
+
+    if (portfolio.length === 0) {
+        return (
+            <div className="portfolio-table-card">
+                <h4>Portfolio Details</h4>
+                <p>No holdings added yet.</p>
+            </div>
+        );
+    }
 
     return (
         <div className="portfolio-table-card">
@@ -55,8 +86,11 @@ const PortfolioTable = () => {
                 </thead>
 
                 <tbody>
+
                     {portfolio.map((coin) => (
+
                         <tr key={coin.id}>
+
                             <td>{coin.id}</td>
 
                             <td>
@@ -66,17 +100,46 @@ const PortfolioTable = () => {
                                 </div>
                             </td>
 
-                            <td>${coin.price}</td>
-                            <td>${coin.investment}</td>
-                            <td>{coin.coins}</td>
-                            <td>${coin.value}</td>
+                            <td>
+                                ${coin.price.toLocaleString()}
+                            </td>
 
-                            <td className={coin.pl.includes("-") ? "red" : "green"}>
-                                {coin.pl}
+                            <td>
+                                ${coin.investment.toLocaleString(
+                                    undefined,
+                                    {
+                                        maximumFractionDigits: 2,
+                                    }
+                                )}
+                            </td>
+
+                            <td>
+                                {coin.coins}
+                            </td>
+
+                            <td>
+                                ${coin.value.toLocaleString(
+                                    undefined,
+                                    {
+                                        maximumFractionDigits: 2,
+                                    }
+                                )}
+                            </td>
+
+                            <td
+                                className={
+                                    Number(coin.pl) >= 0
+                                        ? "green"
+                                        : "red"
+                                }
+                            >
+                                {coin.pl}%
                             </td>
 
                         </tr>
+
                     ))}
+
                 </tbody>
 
             </table>

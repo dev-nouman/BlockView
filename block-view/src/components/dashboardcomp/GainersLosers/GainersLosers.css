@@ -1,42 +1,33 @@
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
+.gl-card {
+    display: flex;
+    gap: 20px;
 }
 
-.tabs button {
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  background: transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 12px;
+.gl-section {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
 }
 
-.tabs .active {
-  background: var(--primary);
-  color: white;
+.gl-section h4 {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--text);
 }
 
-.list {
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
+.gl-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
 }
 
 .green {
-  color: #22c55e;
-  font-weight: 600;
+    color: #22c55e;
 }
 
 .red {
-  color: #ef4444;
-  font-weight: 600;
+    color: #ef4444;
 }

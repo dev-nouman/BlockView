@@ -1,12 +1,38 @@
 import React from "react";
 import "./CurrentValue.css";
 
-const CurrentValue = () => {
+const CurrentValue = ({
+  currentValue,
+  totalInvestment,
+}) => {
+
+  const profit =
+    currentValue - totalInvestment;
+
+  const profitPercent =
+    totalInvestment > 0
+      ? ((profit / totalInvestment) * 100).toFixed(2)
+      : 0;
+
   return (
     <div className="dash-card">
+
       <h4>Current Value</h4>
-      <h2>$12,450</h2>
-      <p className="positive">+2.4%</p>
+
+      <h2>
+        ${currentValue.toLocaleString()}
+      </h2>
+
+      <p
+        className={
+          profit >= 0
+            ? "positive"
+            : "negative"
+        }
+      >
+        {profitPercent}%
+      </p>
+
     </div>
   );
 };
