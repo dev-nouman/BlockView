@@ -70,12 +70,13 @@ const Dashboard = () => {
         />
       </div>
 
+      <ExportButtons />
+
       <PortfolioTable
         portfolio={portfolio}
         market={marketCoins}
       />
 
-      <ExportButtons />
 
     </div>
   );
