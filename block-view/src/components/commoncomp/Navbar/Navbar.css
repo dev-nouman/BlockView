@@ -67,11 +67,17 @@
   border-color: var(--primary);
 }
 
+.theme-toggle-nav {
+  margin-left: auto;
+  margin-right: 0;
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
 
   .hamburger {
     display: block;
+    order: 3;
   }
 
   .nav-links {
@@ -94,6 +100,11 @@
   .nav-links li {
     padding: 2rem 0;
     margin: 0;
+  }
+
+  .theme-toggle-nav {
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .navbar {

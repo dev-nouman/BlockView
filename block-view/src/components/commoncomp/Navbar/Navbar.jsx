@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiMenu, FiX } from "react-icons/fi"
 import { useAuth } from '../../../context/AuthContext'
+import ThemeToggle from '../ThemeToggle/ThemeToggle'
 import "./Navbar.css"
 
 const Navbar = () => {
@@ -18,9 +19,11 @@ const Navbar = () => {
   return (
     <nav className='navbar'>
       <h2 className='logo'><Link to='/'>Block View</Link></h2>
+      
       <div className="hamburger" onClick={() => setOpen(!open)}>
         {open ? <FiX /> : <FiMenu />}
       </div>
+
       <ul className={`nav-links ${open ? "active" : ""}`}>
         <li><Link to='/' onClick={() => setOpen(false)}>Home</Link></li>
         <li><Link to='/dashboard' onClick={() => setOpen(false)}>Dashboard</Link></li>
@@ -36,6 +39,9 @@ const Navbar = () => {
             <li><Link to='/signup' onClick={() => setOpen(false)}>Sign Up</Link></li>
           </>
         )}
+        <li className="theme-toggle-nav">
+          <ThemeToggle />
+        </li>
       </ul>
     </nav>
   )

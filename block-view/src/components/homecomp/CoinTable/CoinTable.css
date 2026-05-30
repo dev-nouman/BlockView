@@ -26,6 +26,11 @@
   color: var(--text);
 }
 
+.dark .coin-table th {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
 .coin-table td {
   padding: 20px 18px;
   border-top: 1px solid var(--border);
